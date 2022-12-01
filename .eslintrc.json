@@ -1,0 +1,168 @@
+{
+  // プログラムの実行環境を ESLint に教える。その環境で使用可能なグローバル変数などがプリセットされている
+  "env": {
+    "browser": true,
+    "es2022": true
+  },
+  // 既存の設定を流用する。設定が重複している場合、リストの後ろに記述されたほうの値で上書きされる
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "standard-with-typescript",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  // パーサの各種実行オプションを設定する
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "tsconfigRootDir": ".",
+    "project": ["./tsconfig.json"],
+    "sourceType": "module"
+  },
+  // 任意の（パッケージとしてインストール済みの）プラグインを有効化する
+  // ただしplugins の中に記述してもルールが追加されるのみなので適
+  // 用は別途行う必要がある←extends で追加
+  "plugins": [
+    "@typescript-eslint",
+    // Web アクセシビリティに配慮した記述を JSX で行うための各種ルールを追加する
+    "jsx-a11y",
+    "react",
+    // React Hooksを使ったとき、適切な記述になるよう用意されたルール を追加する
+    "react-hooks"
+  ],
+  // 適用する個々のルールと、エラーレベルや例外などその設定値を記述する
+  "rules": {
+    "padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "return"
+      }
+    ],
+    // オブジェクトの型定義にインターフェースまたは型エイリアスのどちらかを強制するルール
+    "@typescript-eslint/consistent-type-definitions": "off",
+    // 関 数 の 戻 り 値 に 必 ず 型 定 義 を 書 か な け れ ば い け な い ル ー ル
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": ["error"],
+    // Promise の誤用を防ぐためのルール
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        // async 関数のコールに明示的に void キーワードをつけることを強制する
+        "checksVoidReturn": false
+      }
+    ],
+    // 使用していない変数の定義を許さないルール
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        // 変数および引数の名前の頭を _ にしたときのみ許容するように設定。
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    // Boolean 値が期待される表現で Boolean 型以外の使用を許さないルール
+    "@typescript-eslint/strict-boolean-expressions": [
+      "error",
+      {
+        // ここではオブジェクト、関数、 null 、 undefined の場合には許容するように設定
+        "allowNullableObject": true
+      }
+    ],
+    // トリプルスラッシュ・ディレクティブの使用を許可するかどうかを定義するルール
+    "@typescript-eslint/triple-slash-reference": [
+      "error",
+      {
+        // トリプルスラッシュ・ディレクティブの使用を許可するかどうかを定義するルール
+        "types": "always"
+      }
+    ],
+    // インポートの際のファイル拡張子を記述するかを定義するルール。
+    "import/extensions": [
+      "error",
+      {
+        // .js 、.jsx 、.ts 、.tsx のファイルのみ拡張子を省略し、他のファイルは拡張子を記述させるように設定
+        "ignorePackages": true,
+        "pattern": {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      }
+    ],
+    // モジュールインポートの順番をカスタマイズできるルール
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "object",
+          "index"
+        ],
+        "pathGroups": [
+          {
+            // ここでは react および react-dom モジュールを最初に、
+            "pattern": "{react,react-dom/**,react-router*}",
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            // 非相対パスで記述した内部モジュールのコンポーネントを相対パスモジュールの直前に、
+            "pattern": "{routes/**,stores/**,utils/**,hooks/**,domains/**}",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "{A-Z]*,**/[A-Z]*}",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "assets/**}",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            // CSS Modulesファイルのインポートを最後になるよう設定
+            "pattern": "./*.{css,scss,sass,less}",
+            "group": "index",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ],
+    // displayName コンポーネントのプロパティで、デバッグメッセージでコンポーネントを明示するのに使用される。これがなくてもほとんどの場合はコンポーネントを特定できるため無効化
+    "react/display-name": "off"
+  },
+  // 特定のファイルにのみ任意のルールを適用する
+  "overrides": [
+    {
+      "files": ["*.tsx"],
+      "rules": {
+        // コンポーネントの props に型チェックを行うための propTypes プロパティの定義を強制するルール。
+        //  eslint-config-airbnb で設定されているが、 TypeScript の場合は不要なのでファイル拡張子が .tsxの場合に無効化するよう設定を上書き
+        "react/prop-types": "off"
+      }
+    }
+  ],
+  // 各プラグインの追加の設定を記述する
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

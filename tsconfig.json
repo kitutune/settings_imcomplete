@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // 参考 https://www.typescriptlang.org/ja/tsconfig
+    // 古いバージョンのtargetを指定すると昨今当然のように使っているオブジェクトや関数を使うことができない
+    "target": "ES2020",//Node 14	なら　ES2020
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    // .jsを許容しない
+    "allowJs": false,
+    // 型システムの精度を犠牲にすることで、コンパイル実行時間を削減
+    "skipLibCheck": true,
+    // すべてのインポートに対して Namespace オブジェクトを生成することによって、CommonJS と ES Modules 間で相互運用可能なコードを出力します
+    "esModuleInterop": false,
+    // 明示的にデフォルトエクスポートしていないモジュールでもデフォルトインポートできるようにする
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    // インポート時にファイルパス記述の大文字・小文字を区別する
+    "forceConsistentCasingInFileNames": true,
+    // 出力するモジュールの形式を指定する
+    "module": "ES2020",
+    // モジュールの解決戦略を指定する
+    "moduleResolution": "Node",
+    // … JSON ファイルをインポートしてできたオブジェクトに自動的に型をつける
+    "resolveJsonModule": true,
+    // すべてのファイルを単一のモジュールとしてコンパイルする場合に安全でないと思われるいくつかの
+// 記法をコンパイルエラーにする
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": "src"
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
