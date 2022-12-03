@@ -24,7 +24,11 @@
     // 左ペインの Explorer のファイルアイコンをバリエーション豊かにしてくれる
     "vscode-icons-team.vscode-icons",
     // モジュールをインポートしている文の横に、算出したバンドルサイズを表示してくれる
-    "wix.vscode-import-cost"
+    "wix.vscode-import-cost",
+    // reactのスニペット
+    "dsznajder.es7-react-js-snippets",
+    //開きタグ閉じタグどちらかを「リネームすると対応するタグもリネームしてくれる
+    "formulahendry.auto-rename-tag"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []
